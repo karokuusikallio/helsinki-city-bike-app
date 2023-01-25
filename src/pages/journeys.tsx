@@ -7,10 +7,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Helsinki City Bike App</title>
+        <title>Journeys | Helsinki City Bike App</title>
       </Head>
       <main>
-        <h2>Home</h2>
+        <h2>Journeys</h2>
       </main>
     </>
   );

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import prismaClient from "../../client";
+import { prismaClient } from "../../client";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { stationId, searchWord, skip, take, orderColumn, order } = req.query;
@@ -9,7 +9,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     ordering = {
       [orderColumn as string]: order as string,
     };
-    console.log(ordering);
   }
 
   if (req.method === "GET" && stationId) {
@@ -114,9 +113,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "GET") {
     try {
-      const stations = await prismaClient.station.findMany({
+      const result = await prismaClient.station.findMany({
         skip: Number(skip) || 0,
         take: Number(take) || 10,
+        orderBy: ordering || {
+          id: "asc",
+        },
+      });
+
+      const stations = result.map((station) => {
+        return {
+          id: station.id,
+          name: station.nameFi,
+          address: station.addressFi,
+          city: station.cityFi,
+        };
       });
 
       return res.status(200).json(stations);
