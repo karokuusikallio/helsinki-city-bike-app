@@ -2,57 +2,15 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import axios from "axios";
+import Image from "next/image";
 
-enum LoadingStates {
-  idle = "idle",
-  loading = "loading",
-  finished = "finished",
-}
+import { LoadingStates } from "@/types";
+import { Station } from "@/types";
 
 enum SortingColumns {
   name = "nameFi",
   address = "addressFi",
 }
-
-interface Station {
-  id: string;
-  name: string;
-  address: string;
-  departures?: number;
-  returns?: number;
-}
-
-const upArrow = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    fill="currentColor"
-    className="bi bi-arrow-up-short"
-    viewBox="0 0 16 16"
-  >
-    <path
-      fill-rule="evenodd"
-      d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"
-    />
-  </svg>
-);
-
-const downArrow = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    fill="currentColor"
-    className="bi bi-arrow-down-short"
-    viewBox="0 0 16 16"
-  >
-    <path
-      fill-rule="evenodd"
-      d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
-    />
-  </svg>
-);
 
 export default function Home() {
   const [stations, setStations] = useState<Station[] | null>(null);
@@ -161,13 +119,23 @@ export default function Home() {
                     style={{ cursor: "pointer" }}
                   >
                     Name
-                    {sortingColumn === SortingColumns.name && ascending
-                      ? upArrow
-                      : null}
+                    {sortingColumn === SortingColumns.name && ascending ? (
+                      <Image
+                        src="/icons/uparrow.svg"
+                        alt="upArrow"
+                        width={20}
+                        height={20}
+                      />
+                    ) : null}
                     {sortingColumn === SortingColumns.name &&
-                    ascending === false
-                      ? downArrow
-                      : null}
+                    ascending === false ? (
+                      <Image
+                        src="/icons/downarrow.svg"
+                        alt="downArrow"
+                        width={20}
+                        height={20}
+                      />
+                    ) : null}
                   </th>
                   <th
                     scope="col"
@@ -175,13 +143,23 @@ export default function Home() {
                     style={{ cursor: "pointer" }}
                   >
                     Address
-                    {sortingColumn === SortingColumns.address && ascending
-                      ? upArrow
-                      : null}
+                    {sortingColumn === SortingColumns.address && ascending ? (
+                      <Image
+                        src="/icons/uparrow.svg"
+                        alt="upArrow"
+                        width={20}
+                        height={20}
+                      />
+                    ) : null}
                     {sortingColumn === SortingColumns.address &&
-                    ascending === false
-                      ? downArrow
-                      : null}
+                    ascending === false ? (
+                      <Image
+                        src="/icons/downarrow.svg"
+                        alt="downArrow"
+                        width={20}
+                        height={20}
+                      />
+                    ) : null}
                   </th>
                 </tr>
               </thead>
@@ -190,7 +168,7 @@ export default function Home() {
                   return (
                     <tr key={station.id}>
                       <td>
-                        <Link href={`/station/${station.id}`}>
+                        <Link href={`/stations/${station.id}`}>
                           {station.name}
                         </Link>
                       </td>

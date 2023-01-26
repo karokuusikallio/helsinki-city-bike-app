@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "GET" && stationId) {
     try {
-      const station = await prismaClient.station.findFirst({
+      const result = await prismaClient.station.findUnique({
         where: {
           id: Number(stationId),
         },
@@ -31,11 +31,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      return res.status(200).json({
+      const station = {
+        name: result?.nameFi,
+        address: result?.addressFi,
+        capacity: result?.capacity,
+        xCoord: result?.xCoord,
+        yCoord: result?.yCoord,
         departures: departures.length,
         returns: returns.length,
-        ...station,
-      });
+      };
+
+      return res.status(200).json(station);
     } catch (error) {
       console.log(error);
       return res.status(400).json({ error });
