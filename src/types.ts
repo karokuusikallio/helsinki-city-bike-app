@@ -14,3 +14,14 @@ export interface Station {
   departures?: number;
   returns?: number;
 }
+
+export interface Journey {
+  id: string;
+  departureDate: Date;
+  returnDate: Date;
+  departureStationName: string;
+  returnStationName: string;
+  coveredDistance: number;
+  duration: number;
+  cursor: string;
+}

@@ -1,45 +1,48 @@
+import { Journey } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prismaClient } from "../../client";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { cursor, take, orderColumn, order } = req.query;
+  const { skip, take, orderColumn, order } = req.query;
 
   let ordering = null;
   if (orderColumn && order) {
     ordering = {
       [orderColumn as string]: order as string,
     };
-    console.log(ordering);
-  }
-
-  if (req.method === "GET" && cursor) {
-    try {
-      const journeys = await prismaClient.journey.findMany({
-        skip: 1,
-        take: Number(take) || 10,
-        cursor: {
-          id: cursor as string,
-        },
-        orderBy: ordering || {
-          id: "asc",
-        },
-      });
-
-      return res.status(200).json(journeys);
-    } catch (error) {
-      console.log(error);
-      return res.status(400).json({ error });
-    }
   }
 
   if (req.method === "GET") {
     try {
-      const journeys = await prismaClient.journey.findMany({
+      const result = await prismaClient.journey.findMany({
         take: Number(take) || 10,
+        skip: Number(skip) || 0,
         orderBy: ordering || {
           id: "asc",
         },
       });
+
+      const journeys = result.map(
+        ({
+          id,
+          departureDate,
+          returnDate,
+          departureStationName,
+          returnStationName,
+          coveredDistance,
+          duration,
+        }: Journey) => {
+          return {
+            id,
+            departureDate,
+            returnDate,
+            departureStationName,
+            returnStationName,
+            coveredDistance,
+            duration,
+          };
+        }
+      );
 
       return res.status(200).json(journeys);
     } catch (error) {

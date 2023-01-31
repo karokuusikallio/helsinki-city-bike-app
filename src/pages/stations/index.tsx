@@ -60,111 +60,113 @@ export default function Home() {
       </Head>
       <main>
         <h2>Stations</h2>
-        {loading === LoadingStates.idle ? null : loading ===
-          LoadingStates.loading ? (
-          <p>Loading...</p>
-        ) : loading === LoadingStates.finished && stations ? (
-          <>
-            <div className="dropdown">
-              <button
-                className="btn btn-secondary dropdown-toggle"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Results per page: {pageSize}
-              </button>
-              <ul className="dropdown-menu">
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={() => {
-                      setPageSize(10);
-                      setPage(0);
-                    }}
-                  >
-                    10
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={() => {
-                      setPageSize(20);
-                      setPage(0);
-                    }}
-                  >
-                    20
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    onClick={() => {
-                      setPageSize(30);
-                      setPage(0);
-                    }}
-                  >
-                    30
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <table className="table">
-              <thead>
+        <>
+          <div className="dropdown">
+            <button
+              className="btn btn-secondary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Results per page: {pageSize}
+            </button>
+            <ul className="dropdown-menu">
+              <li>
+                <a
+                  className="dropdown-item"
+                  onClick={() => {
+                    setPageSize(10);
+                    setPage(0);
+                  }}
+                >
+                  10
+                </a>
+              </li>
+              <li>
+                <a
+                  className="dropdown-item"
+                  onClick={() => {
+                    setPageSize(20);
+                    setPage(0);
+                  }}
+                >
+                  20
+                </a>
+              </li>
+              <li>
+                <a
+                  className="dropdown-item"
+                  onClick={() => {
+                    setPageSize(30);
+                    setPage(0);
+                  }}
+                >
+                  30
+                </a>
+              </li>
+            </ul>
+          </div>
+          <table className="table">
+            <thead>
+              <tr>
+                <th
+                  scope="col"
+                  onClick={() => handleSorting(SortingColumns.name)}
+                  style={{ cursor: "pointer" }}
+                >
+                  Name
+                  {sortingColumn === SortingColumns.name && ascending ? (
+                    <Image
+                      src="/icons/uparrow.svg"
+                      alt="upArrow"
+                      width={20}
+                      height={20}
+                    />
+                  ) : null}
+                  {sortingColumn === SortingColumns.name &&
+                  ascending === false ? (
+                    <Image
+                      src="/icons/downarrow.svg"
+                      alt="downArrow"
+                      width={20}
+                      height={20}
+                    />
+                  ) : null}
+                </th>
+                <th
+                  scope="col"
+                  onClick={() => handleSorting(SortingColumns.address)}
+                  style={{ cursor: "pointer" }}
+                >
+                  Address
+                  {sortingColumn === SortingColumns.address && ascending ? (
+                    <Image
+                      src="/icons/uparrow.svg"
+                      alt="upArrow"
+                      width={20}
+                      height={20}
+                    />
+                  ) : null}
+                  {sortingColumn === SortingColumns.address &&
+                  ascending === false ? (
+                    <Image
+                      src="/icons/downarrow.svg"
+                      alt="downArrow"
+                      width={20}
+                      height={20}
+                    />
+                  ) : null}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading === LoadingStates.idle ? null : loading ===
+                LoadingStates.loading ? (
                 <tr>
-                  <th
-                    scope="col"
-                    onClick={() => handleSorting(SortingColumns.name)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Name
-                    {sortingColumn === SortingColumns.name && ascending ? (
-                      <Image
-                        src="/icons/uparrow.svg"
-                        alt="upArrow"
-                        width={20}
-                        height={20}
-                      />
-                    ) : null}
-                    {sortingColumn === SortingColumns.name &&
-                    ascending === false ? (
-                      <Image
-                        src="/icons/downarrow.svg"
-                        alt="downArrow"
-                        width={20}
-                        height={20}
-                      />
-                    ) : null}
-                  </th>
-                  <th
-                    scope="col"
-                    onClick={() => handleSorting(SortingColumns.address)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Address
-                    {sortingColumn === SortingColumns.address && ascending ? (
-                      <Image
-                        src="/icons/uparrow.svg"
-                        alt="upArrow"
-                        width={20}
-                        height={20}
-                      />
-                    ) : null}
-                    {sortingColumn === SortingColumns.address &&
-                    ascending === false ? (
-                      <Image
-                        src="/icons/downarrow.svg"
-                        alt="downArrow"
-                        width={20}
-                        height={20}
-                      />
-                    ) : null}
-                  </th>
+                  <td>Loading...</td>
                 </tr>
-              </thead>
-              <tbody>
-                {stations.map((station) => {
+              ) : loading === LoadingStates.finished && stations ? (
+                stations.map((station) => {
                   return (
                     <tr key={station.id}>
                       <td>
@@ -175,23 +177,25 @@ export default function Home() {
                       <td>{station.address}</td>
                     </tr>
                   );
-                })}
-              </tbody>
-            </table>
-            <div>
-              <p>Page: {page + 1}</p>
-              {page > 1 ? (
-                <button onClick={() => setPage(0)}>First Page</button>
-              ) : null}
-              {page > 0 ? (
-                <button onClick={() => setPage(page - 1)}>Previous Page</button>
-              ) : null}
-              <button onClick={() => setPage(page + 1)}>Next Page</button>
-            </div>
-          </>
-        ) : (
-          <p>No data</p>
-        )}
+                })
+              ) : (
+                <tr>
+                  <td>No data</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          <div>
+            <p>Page: {page + 1}</p>
+            {page > 1 ? (
+              <button onClick={() => setPage(0)}>First Page</button>
+            ) : null}
+            {page > 0 ? (
+              <button onClick={() => setPage(page - 1)}>Previous Page</button>
+            ) : null}
+            <button onClick={() => setPage(page + 1)}>Next Page</button>
+          </div>
+        </>
       </main>
     </>
   );

@@ -1,7 +1,8 @@
 import type { AppProps } from "next/app";
-import { useRef, useEffect, memo, MemoExoticComponent } from "react";
+import { useRef, useEffect, memo } from "react";
 import { useRouter } from "next/router";
 import "bootstrap/dist/css/bootstrap.css";
+import "../styles/main.css";
 import Head from "next/head";
 import Header from "../components/Header";
 
