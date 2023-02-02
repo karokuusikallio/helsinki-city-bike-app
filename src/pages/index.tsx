@@ -1,10 +1,7 @@
-import { useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 
 export default function Home() {
-  useEffect(() => {}, []);
-
   return (
     <>
       <Head>

@@ -34,7 +34,7 @@ const AmountOfJourneys = ({ stationId }: AmountProps) => {
     if (stationId) {
       getAmountofJourneys();
     }
-  }, []);
+  }, [stationId]);
 
   return (
     <>
