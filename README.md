@@ -6,4 +6,6 @@ If you want to build the project locally: 1. download the source code 2. npm ins
 
 If you want to run tests locally: 1. download the source code 2. npm install 3. npm run test
 
+Whether you can to run or test locally, make sure to copy two .env files to the project root. These files will be provided in a zip-file with the application.
+
 Hope you enjoy trying it out!
