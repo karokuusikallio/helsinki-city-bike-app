@@ -16,13 +16,12 @@ const AmountOfJourneys = ({ stationId }: AmountProps) => {
   const [amountOfJourneys, setAmountOfJourneys] = useState<AmountOfJourneys>();
 
   useEffect(() => {
-    const getAmountofJourneys = async () => {
+    const getAmountOfJourneys = async () => {
       try {
         setLoading(LoadingStates.loading);
         const response = await axios.get(
           `/api/station?getAmount=true&stationId=${stationId}`
         );
-        console.log(response);
         setAmountOfJourneys(response.data);
       } catch (error) {
         console.log(error);
@@ -32,7 +31,7 @@ const AmountOfJourneys = ({ stationId }: AmountProps) => {
     };
 
     if (stationId) {
-      getAmountofJourneys();
+      getAmountOfJourneys();
     }
   }, [stationId]);
 
