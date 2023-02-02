@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 
 import { LoadingStates } from "@/types";
 import { Station } from "@/types";
+import AmountOfJourneys from "@/components/AmountOfJourneys";
 
 export default function Home() {
   const [station, setStation] = useState<Station | null>(null);
@@ -39,13 +40,14 @@ export default function Home() {
       <main>
         {loading === LoadingStates.loading ? (
           <p>Loading...</p>
-        ) : loading === LoadingStates.finished ? (
+        ) : loading === LoadingStates.finished && station ? (
           <div>
-            <h2>{station?.name}</h2>
-            <p>Address: {station?.address}</p>
-            <p>Capacity: {station?.capacity} bikes</p>
-            <p>Amount of departures: {station?.departures}</p>
-            <p>Amount of returns: {station?.returns}</p>
+            <h2>{station.name}</h2>
+            <p>Address: {station.address}</p>
+            <p>Capacity: {station.capacity} bikes</p>
+            {stationId ? (
+              <AmountOfJourneys stationId={stationId as string} />
+            ) : null}
           </div>
         ) : (
           <p>No Data</p>

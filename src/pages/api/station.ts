@@ -2,7 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prismaClient } from "../../client";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { stationId, searchWord, skip, take, orderColumn, order } = req.query;
+  const { stationId, searchWord, skip, take, orderColumn, order, getAmount } =
+    req.query;
 
   let ordering = null;
   if (orderColumn && order) {
@@ -11,14 +12,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     };
   }
 
-  if (req.method === "GET" && stationId) {
+  if (req.method === "GET" && stationId && getAmount) {
     try {
-      const result = await prismaClient.station.findUnique({
-        where: {
-          id: Number(stationId),
-        },
-      });
-
       const departures = await prismaClient.journey.findMany({
         where: {
           departureStationId: Number(stationId),
@@ -31,14 +26,32 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
+      const amounts = {
+        departures: departures.length,
+        returns: returns.length,
+      };
+
+      return res.status(200).json(amounts);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ error });
+    }
+  }
+
+  if (req.method === "GET" && stationId) {
+    try {
+      const result = await prismaClient.station.findUnique({
+        where: {
+          id: Number(stationId),
+        },
+      });
+
       const station = {
         name: result?.nameFi,
         address: result?.addressFi,
         capacity: result?.capacity,
         xCoord: result?.xCoord,
         yCoord: result?.yCoord,
-        departures: departures.length,
-        returns: returns.length,
       };
 
       return res.status(200).json(station);
@@ -51,6 +64,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET" && searchWord) {
     try {
       const result = await prismaClient.station.findMany({
+        take: Number(take) || 10,
+        skip: Number(skip) || 0,
         where: {
           OR: [
             {
@@ -60,43 +75,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               },
             },
             {
-              nameSwe: {
-                contains: searchWord as string,
-                mode: "insensitive",
-              },
-            },
-            {
-              nameEng: {
-                contains: searchWord as string,
-                mode: "insensitive",
-              },
-            },
-            {
               addressFi: {
-                contains: searchWord as string,
-                mode: "insensitive",
-              },
-            },
-            {
-              addressSwe: {
-                contains: searchWord as string,
-                mode: "insensitive",
-              },
-            },
-            {
-              cityFi: {
-                contains: searchWord as string,
-                mode: "insensitive",
-              },
-            },
-            {
-              citySwe: {
-                contains: searchWord as string,
-                mode: "insensitive",
-              },
-            },
-            {
-              operator: {
                 contains: searchWord as string,
                 mode: "insensitive",
               },
@@ -108,8 +87,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
+      const stations = result.map((station) => {
+        return {
+          id: station.id,
+          name: station.nameFi,
+          address: station.addressFi,
+        };
+      });
+
       return res.status(200).json({
-        result,
+        stations,
       });
     } catch (error) {
       console.log(error);
@@ -132,7 +119,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           id: station.id,
           name: station.nameFi,
           address: station.addressFi,
-          city: station.cityFi,
         };
       });
 

@@ -5,7 +5,7 @@ export enum LoadingStates {
 }
 
 export interface Station {
-  id: string;
+  id: number;
   name: string;
   address: string;
   xCoord?: number;
